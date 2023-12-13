@@ -5,19 +5,16 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Window
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baeyer.notesapp.data.model.Note
 import com.baeyer.notesapp.databinding.ActivityMainBinding
 import com.baeyer.notesapp.databinding.DialogLayoutBinding
 import com.baeyer.notesapp.presentation.adapters.NoteAdapter
-import com.baeyer.notesapp.presentation.adapters.NoteItemDiffCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

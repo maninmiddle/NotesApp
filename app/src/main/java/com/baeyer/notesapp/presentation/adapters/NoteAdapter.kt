@@ -3,16 +3,12 @@ package com.baeyer.notesapp.presentation.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.baeyer.notesapp.data.model.Note
 import com.baeyer.notesapp.databinding.NoteItemBinding
 
-class NoteAdapter() : ListAdapter<Note, NoteViewHolder>(
+class NoteAdapter : ListAdapter<Note, NoteViewHolder>(
     NoteItemDiffCallback()
 ) {
-
-    private val notes = mutableListOf<Note>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
