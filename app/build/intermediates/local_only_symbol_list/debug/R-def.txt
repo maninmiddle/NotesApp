@@ -1,0 +1,25 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color white
+drawable ic_add
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+id addNoteBtn
+id etName
+id etText
+id rvLayout
+id text
+layout activity_main
+layout dialog_layout
+layout note_item
+mipmap ic_launcher
+mipmap ic_launcher_round
+string addNote
+string app_name
+string example
+string stringEditNote
+style Base.Theme.NotesApp
+style Theme.NotesApp
+xml backup_rules
+xml data_extraction_rules

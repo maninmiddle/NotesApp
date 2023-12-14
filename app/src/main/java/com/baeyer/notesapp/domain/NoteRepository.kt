@@ -6,4 +6,8 @@ interface NoteRepository {
     suspend fun addNote(note: Note)
 
     suspend fun getNotes(): MutableList<Note>
+
+    suspend fun editNote(note: Note)
+
+    suspend fun deleteNote(note: Note)
 }

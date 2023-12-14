@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.baeyer.notesapp.data.model.Note
 import com.baeyer.notesapp.domain.AddNoteUseCase
+import com.baeyer.notesapp.domain.DeleteNoteUseCase
+import com.baeyer.notesapp.domain.EditNoteUseCase
 import com.baeyer.notesapp.domain.GetNotesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +17,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val addNoteUseCase: AddNoteUseCase,
-    private val getNotesUseCase: GetNotesUseCase
+    private val editNoteUseCase: EditNoteUseCase,
+    private val getNotesUseCase: GetNotesUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase
 ) : ViewModel() {
     private val _notes = MutableStateFlow(
         mutableListOf(Note(null, null, null))
@@ -26,9 +30,22 @@ class MainViewModel @Inject constructor(
     fun addNote(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
             addNoteUseCase.addNote(note)
-            _notes.value = getNotesUseCase.getNotes()
+            getNotes()
         }
+    }
 
+    fun deleteNote(note: Note) {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteNoteUseCase.deleteNote(note)
+            getNotes()
+        }
+    }
+
+    fun editNote(note: Note) {
+        viewModelScope.launch(Dispatchers.IO) {
+            editNoteUseCase.editNote(note)
+            getNotes()
+        }
     }
 
     fun getNotes() {

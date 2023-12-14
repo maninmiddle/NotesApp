@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.baeyer.notesapp-mergeDebugResources-37:/values-watch-v20/values-watch-v20.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\baeyer\\.gradle\\caches\\transforms-3\\e83d68c4d594d1e8913f607d9447dae6\\transformed\\appcompat-1.6.1\\res\\values-watch-v20\\values-watch-v20.xml",
+                    "from": {
+                        "startLines": "2,5,8",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,214,385",
+                        "endLines": "4,7,10",
+                        "endColumns": "12,12,12",
+                        "endOffsets": "209,380,553"
+                    }
+                }
+            ]
+        }
+    ]
+}

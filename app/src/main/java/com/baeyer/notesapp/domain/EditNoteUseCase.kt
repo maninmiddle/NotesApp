@@ -1,4 +1,12 @@
 package com.baeyer.notesapp.domain
 
-class EditNoteUseCase {
+import com.baeyer.notesapp.data.model.Note
+import javax.inject.Inject
+
+class EditNoteUseCase @Inject constructor(
+    private val repository: NoteRepository
+) {
+    suspend fun editNote(note: Note) {
+        return repository.editNote(note)
+    }
 }

@@ -16,4 +16,12 @@ class NoteRepositoryImpl @Inject constructor(
     override suspend fun getNotes(): MutableList<Note> {
         return noteDao.getNotes()
     }
+
+    override suspend fun editNote(note: Note) {
+        addNote(note)
+    }
+
+    override suspend fun deleteNote(note: Note) {
+        return noteDao.deleteNote(note)
+    }
 }
