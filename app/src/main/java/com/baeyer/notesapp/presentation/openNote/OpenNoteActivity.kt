@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.baeyer.notesapp.R
 import com.baeyer.notesapp.databinding.ActivityOpenNoteBinding
 import com.baeyer.notesapp.presentation.fragments.OpenNoteFragment
@@ -26,6 +27,8 @@ class OpenNoteActivity : AppCompatActivity(), OpenNoteFragment.OnFragmentInterac
 
 
     }
+
+
 
     private fun parseParams() {
         if (!intent.hasExtra(SCREEN_MODE)) {

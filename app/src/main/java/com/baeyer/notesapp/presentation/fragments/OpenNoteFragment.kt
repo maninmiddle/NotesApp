@@ -2,21 +2,20 @@ package com.baeyer.notesapp.presentation.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.baeyer.notesapp.R
 import com.baeyer.notesapp.data.model.Note
 import com.baeyer.notesapp.databinding.FragmentOpenNoteBinding
 import com.baeyer.notesapp.presentation.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -56,9 +55,6 @@ class OpenNoteFragment : Fragment() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         launchRightMode()
-        binding.toolbar.setNavigationOnClickListener {
-            closeListener?.onFragmentInteraction()
-        }
 
 
     }
@@ -71,27 +67,20 @@ class OpenNoteFragment : Fragment() {
     }
 
     private fun launchModeAdd() {
-        binding.toolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.saveNote -> {
-                    viewModel.addNote(
-                        Note(
-                            null,
-                            binding.editTextNoteTitle.text.toString(),
-                            binding.editTextNoteText.text.toString()
-                        )
-                    )
-                    closeListener?.onFragmentInteraction()
-                    true
-                }
 
-                else -> {
-                    false
-                }
-            }
+
+        binding.icBackArrow.setOnClickListener {
+            viewModel.addNote(
+                Note(
+                    id = null,
+                    name = binding.editTextNoteTitle.text.toString(),
+                    text = binding.editTextNoteText.text.toString()
+                )
+            )
+            closeListener?.onFragmentInteraction()
         }
-
     }
+
 
     private fun launchModeEdit() {
         viewModel.getNoteById(noteItemId)
@@ -103,13 +92,33 @@ class OpenNoteFragment : Fragment() {
                 }
             }
         }
-        binding.toolbar.setNavigationOnClickListener {
+        startAutoSave()
+        binding.icBackArrow.setOnClickListener {
+            viewModel.editNote(
+                Note(
+                    id = noteItemId,
+                    name = binding.editTextNoteTitle.text.toString(),
+                    text = binding.editTextNoteText.text.toString()
+                )
+            )
             closeListener?.onFragmentInteraction()
         }
 
-        binding.toolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.saveNote -> {
+
+    }
+
+    private fun startAutoSave() {
+        binding.editTextNoteText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // not used
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // not used
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s!!.length % 5 == 0) {
                     viewModel.editNote(
                         Note(
                             id = noteItemId,
@@ -117,14 +126,12 @@ class OpenNoteFragment : Fragment() {
                             text = binding.editTextNoteText.text.toString()
                         )
                     )
-                    closeListener?.onFragmentInteraction()
-                    true
                 }
-
-                else -> false
             }
-        }
+
+        })
     }
+
 
     private fun parseParams() {
         val args = requireArguments()
