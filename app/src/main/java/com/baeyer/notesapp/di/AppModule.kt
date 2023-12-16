@@ -2,7 +2,6 @@ package com.baeyer.notesapp.di
 
 import android.app.Application
 import android.content.Context
-import android.service.autofill.UserData
 import androidx.room.Room
 import com.baeyer.notesapp.data.db.AppDatabase
 import com.baeyer.notesapp.data.db.dao.NoteDao
@@ -23,6 +22,7 @@ object AppModule {
     fun provideNoteRepository(noteDao: NoteDao): NoteRepository {
         return NoteRepositoryImpl(noteDao)
     }
+
 
 
     @Provides

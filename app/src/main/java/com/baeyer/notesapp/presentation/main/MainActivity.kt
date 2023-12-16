@@ -1,22 +1,21 @@
 package com.baeyer.notesapp.presentation.main
 
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Window
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.baeyer.notesapp.data.model.Note
 import com.baeyer.notesapp.databinding.ActivityMainBinding
-import com.baeyer.notesapp.databinding.DialogLayoutBinding
 import com.baeyer.notesapp.presentation.adapters.NoteAdapter
+import com.baeyer.notesapp.presentation.openNote.OpenNoteActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -26,6 +25,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var noteAdapter: NoteAdapter
     private var updated = false
+
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getNotes()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -33,7 +39,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.addNoteBtn.setOnClickListener {
-            showAddNoteDialog()
+            val intent = OpenNoteActivity.newIntentAddItem(this)
+            startActivity(intent)
         }
 
         viewModel.getNotes()
@@ -49,14 +56,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun rvSetup(notes: MutableList<Note>) {
-        if (!updated) {
-            noteAdapter = NoteAdapter(this@MainActivity)
-            noteAdapter.submitList(notes)
-            binding.rvLayout.adapter = noteAdapter
-            binding.rvLayout.layoutManager = LinearLayoutManager(this@MainActivity)
-            setupSwipeListener(binding.rvLayout)
+        if (notes.isEmpty()) {
+            binding.addYourFirstNote.visibility = View.VISIBLE
+            binding.rvLayout.visibility = View.GONE
+        } else {
+            binding.rvLayout.visibility = View.VISIBLE
+            binding.addYourFirstNote.visibility = View.GONE
+            if (!updated) {
+                noteAdapter = NoteAdapter()
+                noteAdapter.submitList(notes)
+                setupOnClickListener()
+                binding.rvLayout.adapter = noteAdapter
+                binding.rvLayout.layoutManager = GridLayoutManager(this@MainActivity, 2)
+                setupSwipeListener(binding.rvLayout)
+            } else {
+                noteAdapter.submitList(notes)
+            }
         }
 
+
+    }
+
+    private fun setupOnClickListener() {
+        noteAdapter.onShopItemClickListener = { note ->
+            val intent = OpenNoteActivity.newIntentEditItem(this, note.id!!)
+            startActivity(intent)
+        }
     }
 
     private fun setupSwipeListener(rvLayout: RecyclerView) {
@@ -82,37 +107,5 @@ class MainActivity : AppCompatActivity() {
         itemTouchHelper.attachToRecyclerView(rvLayout)
     }
 
-    private fun showAddNoteDialog() {
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(true)
-        val dialogBinding = DialogLayoutBinding.inflate(layoutInflater)
-        dialog.setContentView(dialogBinding.root)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        dialogBinding.addNoteBtn.setOnClickListener {
-            addNote(
-                dialogBinding.etName.text.toString(),
-                dialogBinding.etText.text.toString()
-            )
-            dialog.cancel()
-        }
-        dialog.show()
-    }
-
-
-    private fun addNote(noteName: String, noteText: String) {
-
-        viewModel.addNote(
-            Note(
-                id = null,
-                name = noteName,
-                text = noteText
-            )
-        )
-    }
-
-    fun editNote(note: Note) {
-        viewModel.editNote(note)
-    }
 }

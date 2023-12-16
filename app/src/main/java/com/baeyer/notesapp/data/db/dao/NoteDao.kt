@@ -17,4 +17,7 @@ interface NoteDao {
 
     @Delete
     fun deleteNote(note: Note)
+
+    @Query("SELECT * FROM note WHERE id =:noteId LIMIT 1")
+    fun getNoteById(noteId: Int): Note
 }
