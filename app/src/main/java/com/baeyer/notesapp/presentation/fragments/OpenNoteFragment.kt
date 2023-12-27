@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -52,6 +53,7 @@ class OpenNoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         launchRightMode()
@@ -68,6 +70,24 @@ class OpenNoteFragment : Fragment() {
 
     private fun launchModeAdd() {
 
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.editTextNoteText.text.isNotEmpty() || binding.editTextNoteTitle.text.isNotEmpty()) {
+                    viewModel.addNote(
+                        Note(
+                            id = null,
+                            name = binding.editTextNoteTitle.text.toString(),
+                            text = binding.editTextNoteText.text.toString()
+                        )
+                    )
+
+                }
+                closeListener?.onFragmentInteraction()
+
+            }
+
+        })
+
 
         binding.icBackArrow.setOnClickListener {
             viewModel.addNote(
@@ -83,6 +103,20 @@ class OpenNoteFragment : Fragment() {
 
 
     private fun launchModeEdit() {
+
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                viewModel.editNote(
+                    Note(
+                        id = noteItemId,
+                        name = binding.editTextNoteTitle.text.toString(),
+                        text = binding.editTextNoteText.text.toString()
+                    )
+                )
+                closeListener?.onFragmentInteraction()
+            }
+
+        })
         viewModel.getNoteById(noteItemId)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
