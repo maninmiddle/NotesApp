@@ -73,7 +73,7 @@ class OpenNoteFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (binding.editTextNoteText.text.isNotEmpty() || binding.editTextNoteTitle.text.isNotEmpty()) {
-                    viewModel.addNote(
+                    addNote(
                         Note(
                             id = null,
                             name = binding.editTextNoteTitle.text.toString(),
@@ -90,13 +90,16 @@ class OpenNoteFragment : Fragment() {
 
 
         binding.icBackArrow.setOnClickListener {
-            viewModel.addNote(
-                Note(
-                    id = null,
-                    name = binding.editTextNoteTitle.text.toString(),
-                    text = binding.editTextNoteText.text.toString()
+            if (binding.editTextNoteText.text.isNotEmpty() || binding.editTextNoteTitle.text.isNotEmpty()) {
+                addNote(
+                    Note(
+                        id = null,
+                        name = binding.editTextNoteTitle.text.toString(),
+                        text = binding.editTextNoteText.text.toString()
+                    )
                 )
-            )
+
+            }
             closeListener?.onFragmentInteraction()
         }
     }
@@ -106,7 +109,7 @@ class OpenNoteFragment : Fragment() {
 
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                viewModel.editNote(
+               editNote(
                     Note(
                         id = noteItemId,
                         name = binding.editTextNoteTitle.text.toString(),
@@ -128,7 +131,7 @@ class OpenNoteFragment : Fragment() {
         }
         startAutoSave()
         binding.icBackArrow.setOnClickListener {
-            viewModel.editNote(
+            editNote(
                 Note(
                     id = noteItemId,
                     name = binding.editTextNoteTitle.text.toString(),
@@ -153,7 +156,7 @@ class OpenNoteFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (s!!.length % 5 == 0) {
-                    viewModel.editNote(
+                    editNote(
                         Note(
                             id = noteItemId,
                             name = binding.editTextNoteTitle.text.toString(),
@@ -166,6 +169,12 @@ class OpenNoteFragment : Fragment() {
         })
     }
 
+    private fun editNote(note: Note) {
+        viewModel.editNote(note)
+    }
+    private fun addNote(note: Note) {
+        viewModel.addNote(note)
+    }
 
     private fun parseParams() {
         val args = requireArguments()
