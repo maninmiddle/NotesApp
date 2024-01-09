@@ -22,10 +22,7 @@ class OpenNoteActivity : AppCompatActivity(), OpenNoteFragment.OnFragmentInterac
         setContentView(binding.root)
 
         parseParams()
-
         launchRightMode()
-
-
     }
 
 

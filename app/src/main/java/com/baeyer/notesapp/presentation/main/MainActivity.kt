@@ -1,6 +1,7 @@
 package com.baeyer.notesapp.presentation.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -45,7 +46,6 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getNotes()
 
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.notes.collect { notes ->
@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
             binding.rvLayout.visibility = View.VISIBLE
             binding.addYourFirstNote.visibility = View.GONE
             if (!updated) {
+                updated = true
                 noteAdapter = NoteAdapter()
                 noteAdapter.submitList(notes)
                 setupOnClickListener()
@@ -73,8 +74,6 @@ class MainActivity : AppCompatActivity() {
                 noteAdapter.submitList(notes)
             }
         }
-
-
     }
 
     private fun setupOnClickListener() {
@@ -101,11 +100,8 @@ class MainActivity : AppCompatActivity() {
                 val currentItem = noteAdapter.currentList[viewHolder.adapterPosition]
                 viewModel.deleteNote(currentItem)
             }
-
         }
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rvLayout)
     }
-
-
 }

@@ -22,11 +22,12 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class OpenNoteFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
-    private lateinit var binding: FragmentOpenNoteBinding
+    private var _binding: FragmentOpenNoteBinding? = null
+    private val binding: FragmentOpenNoteBinding
+        get() = _binding ?: throw RuntimeException("FragmentOpenNoteBinding == null")
     private var closeListener: OnFragmentInteractionListener? = null
     private var screenMode = MODE_UNKNOWN
     private var noteItemId = -1
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -46,21 +47,20 @@ class OpenNoteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentOpenNoteBinding.inflate(inflater, container, false)
+        _binding = FragmentOpenNoteBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-
         launchRightMode()
-
-
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     private fun launchRightMode() {
         when (screenMode) {
             MODE_EDIT -> launchModeEdit()
@@ -69,7 +69,6 @@ class OpenNoteFragment : Fragment() {
     }
 
     private fun launchModeAdd() {
-
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (binding.editTextNoteText.text.isNotEmpty() || binding.editTextNoteTitle.text.isNotEmpty()) {
@@ -80,14 +79,10 @@ class OpenNoteFragment : Fragment() {
                             text = binding.editTextNoteText.text.toString()
                         )
                     )
-
                 }
                 closeListener?.onFragmentInteraction()
-
             }
-
         })
-
 
         binding.icBackArrow.setOnClickListener {
             if (binding.editTextNoteText.text.isNotEmpty() || binding.editTextNoteTitle.text.isNotEmpty()) {
@@ -98,15 +93,12 @@ class OpenNoteFragment : Fragment() {
                         text = binding.editTextNoteText.text.toString()
                     )
                 )
-
             }
             closeListener?.onFragmentInteraction()
         }
     }
 
-
     private fun launchModeEdit() {
-
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                editNote(
@@ -118,7 +110,6 @@ class OpenNoteFragment : Fragment() {
                 )
                 closeListener?.onFragmentInteraction()
             }
-
         })
         viewModel.getNoteById(noteItemId)
         lifecycleScope.launch {
@@ -140,8 +131,6 @@ class OpenNoteFragment : Fragment() {
             )
             closeListener?.onFragmentInteraction()
         }
-
-
     }
 
     private fun startAutoSave() {
@@ -149,11 +138,9 @@ class OpenNoteFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // not used
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 // not used
             }
-
             override fun afterTextChanged(s: Editable?) {
                 if (s!!.length % 5 == 0) {
                     editNote(
@@ -165,7 +152,6 @@ class OpenNoteFragment : Fragment() {
                     )
                 }
             }
-
         })
     }
 

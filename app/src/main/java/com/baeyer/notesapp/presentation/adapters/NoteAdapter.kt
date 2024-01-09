@@ -22,17 +22,9 @@ class NoteAdapter(
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = getItem(position)
 
-        holder.binding.noteName.text = note.name
-        holder.binding.noteText.text = note.text
+        holder.bind(note, onShopItemClickListener)
 
 
-        holder.binding.root.setOnClickListener {
-            startOpenNoteActivity(position)
-        }
-    }
-
-    private fun startOpenNoteActivity(position: Int) {
-        onShopItemClickListener?.invoke(getItem(position))
     }
 
 
