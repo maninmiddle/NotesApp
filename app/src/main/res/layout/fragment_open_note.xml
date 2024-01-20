@@ -46,10 +46,18 @@
         android:hint="@string/stringStartTyping"
         android:inputType="textMultiLine|textAutoCorrect"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/boldText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextNoteTitle" />
 
-
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/boldText"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:text="@string/stringBold"
+        android:visibility="gone"
+        app:cornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

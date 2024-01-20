@@ -11,4 +11,14 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="stringAddFirstNote">Add your first note!</string>
     <string name="stringGoBack">Go back</string>
+    <string name="stringBold">B</string>
+    <string name="stringCopy">Copy</string>
+    <string name="stringCut">Cut</string>
+    <string name="stringPaste">Paste</string>
+    <string name="stringMenuBold">Bold</string>
+    <string name="stringItalic">Italic</string>
+    <string name="stringFormat">Format</string>
+    <string name="stringMonospace">Monospace</string>
+    <string name="stringUnderline">Underline</string>
+    <string name="stringNormal">Normal</string>
 </resources>

@@ -1,20 +1,33 @@
 package com.baeyer.notesapp.presentation.fragments
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.StyleSpan
+import android.text.style.TypefaceSpan
+import android.text.style.UnderlineSpan
+import android.view.ActionMode
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.text.getSpans
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.baeyer.notesapp.R
 import com.baeyer.notesapp.data.model.Note
 import com.baeyer.notesapp.databinding.FragmentOpenNoteBinding
+import com.baeyer.notesapp.domain.model.FontStyle
 import com.baeyer.notesapp.presentation.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -55,12 +68,14 @@ class OpenNoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         launchRightMode()
+        binding.editTextNoteText.customSelectionActionModeCallback = CustomActionModeCallback()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
     private fun launchRightMode() {
         when (screenMode) {
             MODE_EDIT -> launchModeEdit()
@@ -101,7 +116,7 @@ class OpenNoteFragment : Fragment() {
     private fun launchModeEdit() {
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-               editNote(
+                editNote(
                     Note(
                         id = noteItemId,
                         name = binding.editTextNoteTitle.text.toString(),
@@ -138,9 +153,11 @@ class OpenNoteFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // not used
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 // not used
             }
+
             override fun afterTextChanged(s: Editable?) {
                 if (s!!.length % 5 == 0) {
                     editNote(
@@ -155,9 +172,94 @@ class OpenNoteFragment : Fragment() {
         })
     }
 
+    private inner class CustomActionModeCallback : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            val inflater = MenuInflater(context)
+            inflater.inflate(R.menu.menu, menu)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+            return when (item?.itemId) {
+                R.id.menuBold -> {
+                    addStyleToSelectedText(FontStyle.BOLD)
+                    mode?.finish()
+                    true
+                }
+
+                R.id.menuItalic -> {
+                    addStyleToSelectedText(FontStyle.ITALIC)
+                    mode?.finish()
+                    true
+                }
+
+
+                R.id.menuClear -> {
+                    clearSelectedText()
+                    mode?.finish()
+                    true
+                }
+
+
+                else -> false
+            }
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+        }
+    }
+
+    private fun clearSelectedText() {
+        val startText = binding.editTextNoteText.selectionStart
+        val endText = binding.editTextNoteText.selectionEnd
+        val allText = binding.editTextNoteText.text
+        if (startText != endText) {
+            val existingStyle =
+                allText.getSpans(startText, endText, StyleSpan::class.java)
+
+            for (span in existingStyle) {
+                allText.removeSpan(span)
+            }
+        }
+    }
+
+    private fun addStyleToSelectedText(fontStyle: FontStyle) {
+        val startText = binding.editTextNoteText.selectionStart
+        val endText = binding.editTextNoteText.selectionEnd
+        val allText = binding.editTextNoteText.text
+        if (startText != endText) {
+
+            val styleSpan = when (fontStyle) {
+                FontStyle.BOLD -> {
+                    StyleSpan(Typeface.BOLD)
+                }
+
+                FontStyle.ITALIC -> {
+                    StyleSpan(Typeface.ITALIC)
+                }
+
+
+            }
+
+            allText.setSpan(
+                styleSpan,
+                startText,
+                endText,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+
+        }
+    }
+
     private fun editNote(note: Note) {
         viewModel.editNote(note)
     }
+
     private fun addNote(note: Note) {
         viewModel.addNote(note)
     }

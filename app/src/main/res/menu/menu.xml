@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/actionCustomTab"
+        android:title="@string/stringFormat">
+        <menu>
+
+            <item
+                android:id="@+id/menuClear"
+                android:title="@string/stringNormal" />
+
+            <item
+                android:id="@+id/menuBold"
+                android:title="@string/stringMenuBold" />
+
+            <item
+                android:id="@+id/menuItalic"
+                android:title="@string/stringItalic" />
+
+            <item
+                android:id="@+id/menuMonospace"
+                android:title="@string/stringMonospace" />
+
+            <item
+                android:id="@+id/menuUnderline"
+                android:title="@string/stringUnderline" />
+        </menu>
+    </item>
+
+</menu>
