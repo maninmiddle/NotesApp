@@ -7,9 +7,11 @@ import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.CharacterStyle
 import android.text.style.StyleSpan
 import android.text.style.TypefaceSpan
 import android.text.style.UnderlineSpan
+import android.util.Log
 import android.view.ActionMode
 import android.view.LayoutInflater
 import android.view.Menu
@@ -197,6 +199,17 @@ class OpenNoteFragment : Fragment() {
                     true
                 }
 
+                R.id.menuUnderline -> {
+                    addStyleToSelectedText(FontStyle.UNDERLINE)
+                    mode?.finish()
+                    true
+                }
+
+                R.id.menuMonospace -> {
+                    addStyleToSelectedText(FontStyle.MONOSPACE)
+                    mode?.finish()
+                    true
+                }
 
                 R.id.menuClear -> {
                     clearSelectedText()
@@ -217,12 +230,16 @@ class OpenNoteFragment : Fragment() {
         val startText = binding.editTextNoteText.selectionStart
         val endText = binding.editTextNoteText.selectionEnd
         val allText = binding.editTextNoteText.text
+
         if (startText != endText) {
             val existingStyle =
-                allText.getSpans(startText, endText, StyleSpan::class.java)
+                allText.getSpans(startText, endText, CharacterStyle::class.java)
+            
 
             for (span in existingStyle) {
-                allText.removeSpan(span)
+                if (span is StyleSpan || span is UnderlineSpan || span is TypefaceSpan) {
+                    allText.removeSpan(span)
+                }
             }
         }
     }
@@ -234,14 +251,10 @@ class OpenNoteFragment : Fragment() {
         if (startText != endText) {
 
             val styleSpan = when (fontStyle) {
-                FontStyle.BOLD -> {
-                    StyleSpan(Typeface.BOLD)
-                }
-
-                FontStyle.ITALIC -> {
-                    StyleSpan(Typeface.ITALIC)
-                }
-
+                FontStyle.BOLD -> StyleSpan(Typeface.BOLD)
+                FontStyle.ITALIC -> StyleSpan(Typeface.ITALIC)
+                FontStyle.UNDERLINE -> UnderlineSpan()
+                FontStyle.MONOSPACE -> TypefaceSpan("monospace")
 
             }
 
