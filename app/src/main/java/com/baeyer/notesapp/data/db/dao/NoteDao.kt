@@ -9,7 +9,7 @@ import com.baeyer.notesapp.data.model.Note
 
 @Dao
 interface NoteDao {
-    @Query("SELECT * FROM note")
+    @Query("SELECT * FROM note ORDER BY lastModified DESC")
     fun getNotes(): MutableList<Note>
 
     @Upsert

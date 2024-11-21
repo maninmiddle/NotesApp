@@ -93,7 +93,8 @@ class OpenNoteFragment : Fragment() {
                         Note(
                             id = null,
                             name = binding.editTextNoteTitle.text.toString(),
-                            text = binding.editTextNoteText.text.toString()
+                            text = binding.editTextNoteText.text.toString(),
+                            lastModified = System.currentTimeMillis()
                         )
                     )
                 }
@@ -107,7 +108,8 @@ class OpenNoteFragment : Fragment() {
                     Note(
                         id = null,
                         name = binding.editTextNoteTitle.text.toString(),
-                        text = binding.editTextNoteText.text.toString()
+                        text = binding.editTextNoteText.text.toString(),
+                        lastModified = System.currentTimeMillis()
                     )
                 )
             }
@@ -122,7 +124,8 @@ class OpenNoteFragment : Fragment() {
                     Note(
                         id = noteItemId,
                         name = binding.editTextNoteTitle.text.toString(),
-                        text = binding.editTextNoteText.text.toString()
+                        text = binding.editTextNoteText.text.toString(),
+                        lastModified = System.currentTimeMillis()
                     )
                 )
                 closeListener?.onFragmentInteraction()
@@ -143,7 +146,8 @@ class OpenNoteFragment : Fragment() {
                 Note(
                     id = noteItemId,
                     name = binding.editTextNoteTitle.text.toString(),
-                    text = binding.editTextNoteText.text.toString()
+                    text = binding.editTextNoteText.text.toString(),
+                    lastModified = System.currentTimeMillis()
                 )
             )
             closeListener?.onFragmentInteraction()
@@ -166,7 +170,8 @@ class OpenNoteFragment : Fragment() {
                         Note(
                             id = noteItemId,
                             name = binding.editTextNoteTitle.text.toString(),
-                            text = binding.editTextNoteText.text.toString()
+                            text = binding.editTextNoteText.text.toString(),
+                            lastModified = System.currentTimeMillis()
                         )
                     )
                 }

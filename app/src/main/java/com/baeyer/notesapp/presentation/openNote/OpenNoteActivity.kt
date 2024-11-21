@@ -26,7 +26,6 @@ class OpenNoteActivity : AppCompatActivity(), OpenNoteFragment.OnFragmentInterac
     }
 
 
-
     private fun parseParams() {
         if (!intent.hasExtra(SCREEN_MODE)) {
             throw RuntimeException("screen mode was not defined")
